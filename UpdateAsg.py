@@ -12,17 +12,13 @@ def GetClient(Service):
 def UpdateAutoScalingGroup(**Params):
     client = GetClient("autoscaling")
     response = None 
-    Min = Params['Min']
-    Desire = Params['Desire']
-    Max = Params['Max']
-    AutoScalingName = Params['Name']
 
     try:
         response = client.update_auto_scaling_group(
-            AutoScalingGroupName = AutoScalingName,
-            MinSize = Min,
-            MaxSize = Max,
-            DesiredCapacity = Desire,
+            AutoScalingGroupName = Params['Name'],
+            MinSize = Params['Min'],
+            MaxSize = Params['Max'],
+            DesiredCapacity = Params['Desire'],
         )
     except Exception as e:
         print(e)
