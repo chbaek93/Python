@@ -28,24 +28,10 @@ def UpdateAutoScalingGroup(**Params):
 if __name__=="__main__":
     BeginTime = time.time() 
     Params = [
-        {
-            'Name' : 'Prd-Asg',
-            'Max': 7,
-            'Min': 4,
-            'Desire': 4
-        },
-        {
-            'Name' : 'Dev-Asg',
-            'Max': 7,
-            'Min': 4,
-            'Desire': 4
-        },
-        {
-            'Name' : 'Stg-Asg',
-            'Max': 7,
-            'Min': 4,
-            'Desire': 4
-        }
+       { 'Name' : 'Prd-Asg', 'Max': 8, 'Min': 4, 'Desire': 4 },
+       { 'Name' : 'Stg-Asg', 'Max': 8, 'Min': 4, 'Desire': 4 },
+       { 'Name' : 'Dev-Asg', 'Max': 8, 'Min': 4, 'Desire': 4 },
+
     ]
 
     for i in Params:
