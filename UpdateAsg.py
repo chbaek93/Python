@@ -9,6 +9,7 @@ def GetClient(Service):
 
     return client
 
+# -- Updates some Auto Scaling Group -- # 
 def UpdateAutoScalingGroup(**Params):
     client = GetClient("autoscaling")
     response = None 
