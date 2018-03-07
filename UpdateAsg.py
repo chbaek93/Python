@@ -1,6 +1,6 @@
 # -- By chb@mz.co.kr -- # 
 # -- On Mar 6, 2018 -- # 
-import boto3 
+import boto3, time 
 
 # -- This is a Session for AWS Connection -- # 
 def GetClient(Service):
@@ -30,7 +30,7 @@ def UpdateAutoScalingGroup(**Params):
 
 # -- def lambda_handler(event, context):
 if __name__=="__main__":
-
+    BeginTime = time.time() 
     Params = [
         {
             'Name' : 'Prd-Asg',
@@ -54,3 +54,4 @@ if __name__=="__main__":
 
     for i in Params:
         UpdateAutoScalingGroup(**i)
+    print("It took time %s sec", (time.time() - BeginTime)) 
