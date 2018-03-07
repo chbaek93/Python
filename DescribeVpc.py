@@ -3,10 +3,21 @@
 
 import boto3, time, json
 from pprint import pprint
-from Libs import GetClient, TmpFileName
 
-# -- You must be define VPC -- # 
-VpcName = "Prd-Bookclub-VPC"
+
+# -- You must be define about VPC -- # 
+VpcName = 'Prd-Mz-VPC'
+TmpFileName = './Datas/' + VpcName + '.json'
+Service = 'ec2'
+Region  = 'ap-northeast-2'
+Profile = 'default'
+
+# -- This is a Session for AWS Connection -- # 
+def GetClient(Service = Service, Region = Region, Profile = Profile):
+    session = boto3.Session(profile_name = Profile)
+    client = session.client(Service, Region)
+    
+    return client
 
 # -- Getting about VPC information -- # 
 def GetVpcs(VpcName):
@@ -21,7 +32,7 @@ def GetVpcs(VpcName):
 
 # -- Getting about Internet Gateway information -- # 
 def GetInternetGateway(VpcId):
-    client = GetClient("ec2") 
+    client = GetClient() 
     response = ''
     try:
         response = client.describe_internet_gateways(Filters=[{'Name': 'attachment.vpc-id', 'Values': [VpcId,]}])
@@ -33,7 +44,7 @@ def GetInternetGateway(VpcId):
 # -- Getting about Subnet information -- # 
 def GetSubnets(VpcId):
     response = None 
-    client = GetClient("ec2")
+    client = GetClient()
 
     try:
         response = client.describe_subnets(Filters=[{'Name':'vpc-id','Values':[VpcId,]}])
@@ -44,7 +55,7 @@ def GetSubnets(VpcId):
 # -- Getting about SecurityGroup information -- # 
 def GetSecurityGroups(VpcId):
     response = None 
-    client = GetClient("ec2")
+    client = GetClient()
     try:
         response = client.describe_security_groups(Filters=[{'Name':'vpc-id', 'Values': [VpcId,]}])
     except Exception as e:
@@ -55,10 +66,10 @@ def GetSecurityGroups(VpcId):
 # -- Getting about Route Tables information -- #
 def GetRouteTables(VpcId):
     response = None 
-    client = GetClient("ec2")
+    client = GetClient()
 
     try:
-        response = client.describe_route_tables(Filters=[{'Name':'vpc-id', 'Values': [VpcId, ] } ]            )
+        response = client.describe_route_tables(Filters=[{'Name':'vpc-id', 'Values': [VpcId, ] } ])
     except Exception as e:
         print(e)
     
@@ -67,7 +78,7 @@ def GetRouteTables(VpcId):
 # -- Getting about Network Acls information -- # 
 def GetNetworkAcls(VpcId):
     response = None 
-    client = GetClient("ec2")
+    client = GetClient()
 
     try:
         response = client.describe_network_acls(Filters=[ { 'Name': 'vpc-id', 'Values': [VpcId,] } ])
@@ -85,7 +96,7 @@ if __name__ == "__main__":
     RouteTables = [] 
     NetworkAcls = [] 
 
-    # -- Collection VPC -- # 
+    # -- Collect information of VPC -- # 
     for vpc in response['Vpcs']:
         for v in vpc['Tags']:
             Vpc.update({'VpcName': VpcName, 'VpcId': vpc['VpcId'], 'CidrBlock': vpc['CidrBlock']})
@@ -121,7 +132,8 @@ if __name__ == "__main__":
         "SecurityGroups":SecurityGroups,
         "NetworkAcls": NetworkAcls 
     }
-
+    
+    # -- Write a information of vpc -- # 
     with open(TmpFileName, "w", encoding='utf8') as f:
         data = json.dumps(Vpcs, indent=4, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
         f.write(data)
