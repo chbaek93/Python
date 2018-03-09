@@ -3,7 +3,6 @@
 # -- AutoScaleAllInOne : Create a AMI -> Launch Configuration -> Create a Auto Scale Group
 
 import boto3, json, time, sys, re, logging
-from Libs import GetClient, CreateTags
 
 Instances = {}
 AmiId = ''
@@ -12,7 +11,8 @@ CreateAsg = False
 # -- boto3.set_stream_logger('boto3', logging.DEBUG)
 Instance = { 
     'InstanceName': 'Prd-Web-Lnx-001', 
-    'AlbName': 'Prod-Poc-Elb'
+    'AlbName': 'Prod-Poc-Elb',
+    'AsgName': 'Prd-Web-Asg',
 }
 
 LcInfo = {
@@ -35,8 +35,8 @@ AsgInfo = {
       'TerminationPolicies': [ 'OldestInstance', ],
       'HealthCheckType' : 'EC2',
       'HealthCheckGracePeriod': 300,
-      'VPCZoneIdentifier': 'subnet-04224a6c,subnet-49ce1005',
-      'Tags' : [ { 'Key' : 'Name', 'Value': 'Prd-Web-Asg' }]
+      'VPCZoneIdentifier': 'subnet-xxx,subnet-xxx',
+      'Tags' : [ { 'Key' : 'Name', 'Value': Instance['AsgName'] }]
 }
 
 # -- This is a Session for AWS Connection -- # 
@@ -63,7 +63,7 @@ def CreateTags(Resource, Values, Key = "Name"):
 
 # -- Create a Ami of specific Instance -- # 
 def CreateAmi(**Params):
-    client = GetClient("ec2")
+    client = GetClient()
     response = {}
 
     try:
@@ -148,7 +148,7 @@ def UpdateAutoScalingGroup(**Params):
     return response 
 
 def GetInstanceId(InstanceName):
-    client = GetClient("ec2")
+    client = GetClient()
     response = {}
 
     try:
