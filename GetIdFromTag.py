@@ -7,12 +7,14 @@ def GetIdFromTag(object, tag):
   return None
   
 if __name__ == "__main__":
-  # ec2 = boto3.resource("ec2")
-  client = GetClient() 
-  tag = 'Bastion'
-  # object = client.instances 
-  object = client.security_groups 
-  response = GetIdFromTag(base, tag)
+  ec2 = boto3.resource("ec2")
+  Tag = 'Bastion'
+  # -- instance : object = client.instances 
+  # -- security_groups : object = client.security_groups 
+  # -- vpcs : object = client.vpcs 
+  # -- subnets : object = client.subnets
+  Base = client.security_groups 
+  response = GetIdFromTag(Base, Tag)
   print(response)
   
  
